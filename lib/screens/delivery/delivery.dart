@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:irisi/screens/delivery/delivery_detail.dart';
 import 'package:irisi/widgets/delivery_card.dart';
@@ -19,13 +18,11 @@ class _DeliveryPageState extends State<DeliveryPage> {
   var _localData = [];
   var fav = [];
   var newFav = [];
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _data = _getRemoteDeliveries();
-    _connection();
     // _getLocalDelivery();
     // print("Init state called");
     // _data = _connection();
@@ -35,9 +32,27 @@ class _DeliveryPageState extends State<DeliveryPage> {
     try {
       final result = await InternetAddress.lookup('google.com');
       print(result);
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {}
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        String _url = "v2/deliveries";
+        HttpService service = HttpService();
+        var res = await service.getRequestNoToken(_url);
+        // print(res);
+        setDeliveryData(jsonEncode(res));
+        print('connected');
+        return res;
+      }
     } on SocketException catch (_) {
-      _getLocalDelivery();
+      print('not connected');
+      var _encodedData = await getDeliveryData();
+      var _decodedData = jsonDecode(_encodedData);
+      print(_decodedData);
+      setState(() {
+        _localData = _decodedData;
+      });
+      // return Scaffold.of(context).showSnackBar(
+      //     SnackBar(content: Text("No network detected, check your internet")));
+      // print(_localData);
+      // return _decodedData;
     }
   }
 
@@ -46,8 +61,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
     HttpService service = HttpService();
     var res = service.getRequestNoToken(_url);
     // print(res);
-    setDeliveryData(jsonEncode(res));
-
+    // setDeliveryData(jsonEncode(res));
     return res;
   }
 
@@ -56,7 +70,6 @@ class _DeliveryPageState extends State<DeliveryPage> {
     var _encodedData = await getDeliveryData();
     var _decodedData = jsonDecode(_encodedData);
     print(_decodedData.runtimeType);
-
     setState(() {
       _localData = _decodedData;
     });
@@ -74,7 +87,6 @@ class _DeliveryPageState extends State<DeliveryPage> {
     setState(() {
       newFav = fav;
     });
-
     print(fav);
   }
 
@@ -83,7 +95,6 @@ class _DeliveryPageState extends State<DeliveryPage> {
     if (fav.contains(id) == true) {
       fav.remove(id);
     }
-
     setState(() {
       newFav = fav;
     });
@@ -97,12 +108,10 @@ class _DeliveryPageState extends State<DeliveryPage> {
   //   var res = await service.getRequestNoToken(_url);
   //   // print(res);
   //   setDeliveryData(jsonEncode(res));
-
   //   setState(() {
   //     _data = res;
   //   });
   // }
-
   // Refresh Function
   _refresh() {
     print('heyyy');
@@ -151,46 +160,9 @@ class _DeliveryPageState extends State<DeliveryPage> {
                     refresh: _refresh,
                   ),
                 ));
-                // return _localData.length > 1
-                //     ? ListView.builder(
-                //         // physics: const AlwaysScrollableScrollPhysics(),
-                //         itemCount: _localData.length,
-                //         // scrollDirection: Axis.vertical,
-                //         shrinkWrap: true,
-                //         itemBuilder: (BuildContext context, int index) {
-                //           // print(_localData[index]);
-                //           return InkWell(
-                //               child: DeliveryCard(
-                //                 from: _localData[index]['route']['start'],
-                //                 to: _localData[index]['route']['end'],
-                //                 isFavourited:
-                //                     newFav.contains(_localData[index]['id']),
-                //                 image: _localData[index]['goodsPicture'],
-                //                 data: _localData[index],
-                //               ),
-                //               onTap: () {
-                //                 Navigator.push(
-                //                     context,
-                //                     MaterialPageRoute(
-                //                         builder: (context) => DeliveryDetail(
-                //                             data: _localData[index],
-                //                             add: addFav,
-                //                             remove: removeFav,
-                //                             fav: fav)));
-                //               });
-                //         },
-                //       )
-                //     : Center(
-                //         child: Padding(
-                //         padding: const EdgeInsets.only(top: 20.0),
-                //         child: NetworkErrorShimmer(
-                //           refresh: _refresh,
-                //         ),
-                //       ));
               } else {
                 if (snapshot.data != null) {
                   print("returns");
-
                   return ListView.builder(
                     // physics: const AlwaysScrollableScrollPhysics(),
                     itemCount: snapshot.data.length,
