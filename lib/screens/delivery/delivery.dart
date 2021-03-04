@@ -25,6 +25,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
     // TODO: implement initState
     super.initState();
     _data = _getRemoteDeliveries();
+    _connection();
     // _getLocalDelivery();
     // print("Init state called");
     // _data = _connection();
@@ -34,28 +35,9 @@ class _DeliveryPageState extends State<DeliveryPage> {
     try {
       final result = await InternetAddress.lookup('google.com');
       print(result);
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        String _url = "v2/deliveries";
-        HttpService service = HttpService();
-        var res = await service.getRequestNoToken(_url);
-        // print(res);
-        setDeliveryData(jsonEncode(res));
-        print('connected');
-        return res;
-      }
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {}
     } on SocketException catch (_) {
-      print('not connected');
-      var _encodedData = await getDeliveryData();
-      var _decodedData = jsonDecode(_encodedData);
-      print(_decodedData);
-      setState(() {
-        _localData = _decodedData;
-      });
-      // return Scaffold.of(context).showSnackBar(
-      //     SnackBar(content: Text("No network detected, check your internet")));
-
-      // print(_localData);
-      // return _decodedData;
+      _getLocalDelivery();
     }
   }
 
@@ -64,7 +46,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
     HttpService service = HttpService();
     var res = service.getRequestNoToken(_url);
     // print(res);
-    // setDeliveryData(jsonEncode(res));
+    setDeliveryData(jsonEncode(res));
 
     return res;
   }
@@ -162,13 +144,42 @@ class _DeliveryPageState extends State<DeliveryPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasError) {
                 // _getLocalDelivery();
-                return Center(
-                    child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: NetworkErrorShimmer(
-                    refresh: _refresh,
-                  ),
-                ));
+                return _localData.length > 1
+                    ? ListView.builder(
+                        // physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: _localData.length,
+                        // scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          // print(_localData[index]);
+                          return InkWell(
+                              child: DeliveryCard(
+                                from: _localData[index]['route']['start'],
+                                to: _localData[index]['route']['end'],
+                                isFavourited:
+                                    newFav.contains(_localData[index]['id']),
+                                image: _localData[index]['goodsPicture'],
+                                data: _localData[index],
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DeliveryDetail(
+                                            data: _localData[index],
+                                            add: addFav,
+                                            remove: removeFav,
+                                            fav: fav)));
+                              });
+                        },
+                      )
+                    : Center(
+                        child: Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: NetworkErrorShimmer(
+                          refresh: _refresh,
+                        ),
+                      ));
               } else {
                 if (snapshot.data != null) {
                   print("returns");
