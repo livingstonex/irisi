@@ -15,8 +15,8 @@ class _SplashState extends State<Splash> {
         Duration(
           seconds: 4,
         ), () {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => DeliveryPage()));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => DeliveryPage()));
     });
   }
 
