@@ -187,6 +187,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
                             isFavourited:
                                 newFav.contains(snapshot.data[index]['id']),
                             image: snapshot.data[index]['goodsPicture'],
+                            data: snapshot.data[index],
                           ),
                           onTap: () {
                             Navigator.push(

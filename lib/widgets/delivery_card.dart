@@ -5,7 +5,8 @@ class DeliveryCard extends StatefulWidget {
   String to;
   bool isFavourited;
   String image;
-  DeliveryCard({this.from, this.to, this.isFavourited, this.image});
+  var data;
+  DeliveryCard({this.from, this.to, this.isFavourited, this.image, this.data});
 
   @override
   _DeliveryCardState createState() => _DeliveryCardState();
@@ -20,6 +21,19 @@ class _DeliveryCardState extends State<DeliveryCard> {
     super.initState();
     isFav = widget.isFavourited;
     // print("build");
+  }
+
+  sanitise(String str) {
+    String result = "";
+    for (int i = 0; i < str.length; i++) {
+      if (str[i] == r'$') {
+        // print(str[i]);
+      } else {
+        result = result + str[i];
+      }
+    }
+
+    return result;
   }
 
   @override
@@ -93,9 +107,9 @@ class _DeliveryCardState extends State<DeliveryCard> {
                             height: 10,
                           ),
                           Text(
-                            "85",
+                            "\$${double.parse(sanitise(widget.data['deliveryFee'])) + double.parse(sanitise(widget.data['deliveryFee']))}",
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
+                                fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                         ],
                       ),
