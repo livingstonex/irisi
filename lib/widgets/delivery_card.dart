@@ -73,7 +73,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
                           Text(
                             "From:  ${widget.from}",
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
+                                fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           SizedBox(
                             height: 10,
@@ -81,7 +81,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
                           Text(
                             "To:  ${widget.to}",
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
+                                fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                         ],
                       ),
@@ -97,7 +97,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
                           widget.isFavourited
                               ? Icon(
                                   Icons.favorite,
-                                  size: 40,
+                                  size: 30,
                                   color: Colors.red,
                                 )
                               : SizedBox(
