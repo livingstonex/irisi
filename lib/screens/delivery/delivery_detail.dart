@@ -5,8 +5,7 @@ class DeliveryDetail extends StatefulWidget {
   final Function add;
   final Function remove;
   var fav;
-  DeliveryDetail(
-      {@required this.data, @required this.add, this.remove, this.fav});
+  DeliveryDetail({this.data, this.add, this.remove, this.fav});
 
   @override
   _DeliveryDetailState createState() => _DeliveryDetailState();

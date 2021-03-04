@@ -15,7 +15,7 @@ class HttpService {
   // Get Request No Token
   getRequestNoToken(String url) async {
     Response res = await get("$baseURL$url");
-
+    print(res);
     return jsonDecode(res.body);
     // if (res.statusCode == 200){
     //   List<dynamic> body = jsonDecode(res.body);

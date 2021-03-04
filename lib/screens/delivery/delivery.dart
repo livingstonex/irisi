@@ -62,9 +62,9 @@ class _DeliveryPageState extends State<DeliveryPage> {
   Future _getRemoteDeliveries() async {
     String _url = "v2/deliveries";
     HttpService service = HttpService();
-    var res = await service.getRequestNoToken(_url);
+    var res = service.getRequestNoToken(_url);
     // print(res);
-    setDeliveryData(jsonEncode(res));
+    // setDeliveryData(jsonEncode(res));
 
     return res;
   }
@@ -169,52 +169,6 @@ class _DeliveryPageState extends State<DeliveryPage> {
                     refresh: _refresh,
                   ),
                 ));
-                // if (_localData.length > 1) {
-                //   return ListView.builder(
-                //     // physics: const AlwaysScrollableScrollPhysics(),
-                //     itemCount: _localData.length,
-                //     // scrollDirection: Axis.vertical,
-                //     shrinkWrap: true,
-                //     itemBuilder: (BuildContext context, int index) {
-                //       // print(_localData[index]);
-                //       return InkWell(
-                //           child: DeliveryCard(
-                //             from: _localData[index]['route']['start'],
-                //             to: _localData[index]['route']['end'],
-                //             isFavourited:
-                //                 newFav.contains(_localData[index]['id']),
-                //             image: _localData[index]['goodsPicture'],
-                //           ),
-                //           onTap: () {
-                //             Navigator.push(
-                //                 context,
-                //                 MaterialPageRoute(
-                //                     builder: (context) => DeliveryDetail(
-                //                         data: _localData[index],
-                //                         add: addFav,
-                //                         remove: removeFav,
-                //                         fav: fav)));
-                //           });
-                //     },
-                //   );
-                // } else {
-                //   return Center(
-                //       child: Padding(
-                //     padding: const EdgeInsets.only(top: 20.0),
-                //     child: NetworkErrorShimmer(
-                //       refresh: _refresh,
-                //     ),
-                //   ));
-                // }
-
-                // Center(
-                //     child: Padding(
-                //   padding: const EdgeInsets.only(top: 20.0),
-                //   child: NetworkErrorShimmer(
-                //     refresh: _refresh,
-                //   ),
-                // ));
-                // Container( child: Text('Error Loading, Refresh!'), );
               } else {
                 if (snapshot.data != null) {
                   print("returns");
